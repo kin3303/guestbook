@@ -1,0 +1,40 @@
+{{- if .Values.redis.master.persistence.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "guestbook.fullname" . }}-backup
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "1"
+spec:
+  template:
+    spec:
+      containers:
+        - name: backup
+          image: redis:alpine3.11
+          command: # ["/script/backup.sh"] 
+            - /bin/sh
+            - -c
+            - cd /data; mkdir -p /data/backup; cp /data/dump.rdb /data/backup/dump-{{ sub .Release.Revision 1 }}.rdb
+          # - cd /data; redis-cli -h  {{ template "redis.fullname" . }}-master save; mkdir -p /data/backup; cp /data/dump.rdb /data/backup']
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data 
+            #- name: script
+            #  mountPath: /script              
+      restartPolicy: OnFailure 
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data-{{ template "redis.fullname" . }}-master-0
+        #- name: script
+        #  configMap:
+        #    name: {{ include "guestbook.fullname" . }}-backup-configmap
+        #    defaultMode: 0500      
+        #    items:
+        #      - key: backup.sh
+        #        path: backup.sh
+{{- end }}

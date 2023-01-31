@@ -1,0 +1,120 @@
+# -- Override the name of the chart.
+nameOverride: ""
+# -- Override the fullname of the chart.
+fullnameOverride: ""
+
+# -- Replica count.
+replicaCount: 1
+
+image:
+  # -- Image repository.
+  repository: gcr.io/google-samples/gb-frontend
+  # -- Image pull policy.
+  pullPolicy: IfNotPresent
+  # -- Image tag.
+  tag: v5
+
+# -- Image pull secrets.
+imagePullSecrets: []
+
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  create: true
+  # -- Annotations to add to the service account.
+  annotations: {}
+  # If not set and create is true, a name is generated using the fullname template
+  # -- The name of the service account to use.
+  name: ""
+
+# -- Annotations to add to the pod.
+podAnnotations: {}
+
+# -- Security context for the pod.
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- Security context for the container.
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+service:
+  # -- Service type.
+  type: NodePort
+  # -- Service port.
+  port: 80
+
+ingress:
+  # -- If true, create an ingress object.
+  enabled: false
+  # -- Ingress class to use.
+  ingressClassName: ""
+  # -- Ingress annotations.
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  # -- Ingress hosts.
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# -- Resource requests and limits.
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  # -- If true, create a HPA for the deployment.
+  enabled: false
+  # -- Minimum number of pod replicas.
+  minReplicas: 1
+  # -- Maximum number of pod replicas.
+  maxReplicas: 10
+  # -- Target CPU utilisation for the pod.
+  targetCPUUtilizationPercentage: 50
+  # -- Target memory utilisation for the pod.
+  targetMemoryUtilizationPercentage: 50
+
+# -- Node labels for pod assignment.
+nodeSelector: {}
+
+# -- Tolerations for pod assignment.
+tolerations: []
+
+# -- Affinity for pod assignment.
+affinity: {}
+
+
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+  replica:
+    replicaCount: 1
+    persistence:
+      enabled: true
+  commonConfiguration: |- 
+    appendonly no 
