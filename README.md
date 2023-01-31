@@ -1,9 +1,9 @@
 
-# Sample Helm Chart
+## Sample Helm Chart
 
 - [Guestbook Application](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
 
-## Step 1. 배포에 필요한 도구 설치
+### Step 1. 배포에 필요한 도구 설치
 
 - Helm 을 테스트 해보기 위해서는 미리 배포된 Kubernetes Cluster 가 필요하다.
 - Cluster 와 연결할 클라이언트는 아래와 같이 Docker, kubectl, helm , helm push plugin, yamllint 를 설치해 놓아야 한다.
@@ -61,7 +61,7 @@ sudo pip3 install yamllint
 yamllint --version
 ```
 
-## Step 2. Cluster 와 연결
+### Step 2. Cluster 와 연결
 
 ```console
 aws configure
