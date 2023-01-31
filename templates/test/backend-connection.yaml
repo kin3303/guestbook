@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "guestbook.fullname" . }}-test-backend-connection
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  containers:
+    - name: test-backend-connection
+      image: redis:alpine3.11
+      command: ["/bin/sh", "-c"]
+      args:  ['redis-cli -h {{ template "redis.fullname" . }}-master get {{ template "guestbook.name" . }}']
+  restartPolicy: Never
