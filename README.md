@@ -10,66 +10,92 @@
    - 아래는 ec2 아마존 리눅스 2 인스턴스에 이와 같은 도구를 설치하는다.
    - Helm으로 Harbor에 Chart를 Push하기 위해서는 helm push plugin을 설치해야 push 명령어를 사용할 수 있다.
 
-```console
-#!/usr/bin/env bash
-
-private_ip=$( curl -Ss -H "X-aws-ec2-metadata-token: $imds_token" 169.254.169.254/latest/meta-data/local-ipv4 )
-
-sudo yum update -y
-sudo yum -y install wget tar
+```console 
+$  private_ip=$( curl -Ss -H "X-aws-ec2-metadata-token: $imds_token" 169.254.169.254/latest/meta-data/local-ipv4 )
+$  sudo yum update -y
+$  sudo yum -y install wget tar
 
 ######################################################################
 # Install docker
 ######################################################################
-sudo amazon-linux-extras install -y docker
-sudo tee  /etc/docker/daemon.json > /dev/null <<EOF
+$  sudo amazon-linux-extras install -y docker
+$  sudo tee  /etc/docker/daemon.json > /dev/null <<EOF
 {
 "insecure-registries" : ["$private_ip","0.0.0.0"]
 }
 EOF
-sudo service docker start
-sudo usermod -a -G docker ec2-user
-sudo chmod 666 /var/run/docker.sock
+$  sudo service docker start
+$  sudo usermod -a -G docker ec2-user
+$  sudo chmod 666 /var/run/docker.sock
 
 ######################################################################
 # Install docker compose
 ######################################################################
-sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+$  sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$  sudo chmod +x /usr/local/bin/docker-compose
+$  sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 ######################################################################
 # Install Kubectl
 ######################################################################
-sudo curl -L "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl
-sudo chmod +x /usr/local/bin/kubectl
-sudo ln -s /usr/local/bin/kubectl /usr/bin/kubectl
+$  sudo curl -L "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl
+$  sudo chmod +x /usr/local/bin/kubectl
+$  sudo ln -s /usr/local/bin/kubectl /usr/bin/kubectl
 
 ######################################################################
 # Install Helm
 ###################################################################### 
-curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2
+$  curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2
 
 ######################################################################
 # Install helm push plugin
 ######################################################################
-sudo yum -y install git
-helm plugin install https://github.com/chartmuseum/helm-push
+$  sudo yum -y install git
+$  helm plugin install https://github.com/chartmuseum/helm-push
 
 ######################################################################
 # Install yamlint 
 ######################################################################
-sudo yum install -y python3-pip
-sudo pip3 install yamllint
-yamllint --version
+$  sudo yum install -y python3-pip
+$  sudo pip3 install yamllint
+$  yamllint --version
 ```
 
 ### Step 2. Cluster 와 연결
 
 ```console
-aws configure
-aws eks --region ap-northeast-2 update-kubeconfig --name <CLUSTER_NAME>
-chmod 600  ~/.kube/config
+$  aws configure
+$  aws eks --region ap-northeast-2 update-kubeconfig --name <CLUSTER_NAME>
+$  chmod 600  ~/.kube/config
+```
+
+### Step 3. Chart 패키지 및 Harbor 에 업로드
+
+- 먼저 Harbor 레포지토리에 guestbook 이라는 프로젝트를 만든다.
+- Chart 패키징 및 패키징된 Chart 를 Harbor 에 업로드 한다. (아래 코드 참조)
+
+```console
+######################################################################
+# Add Repository 
+######################################################################
+$ helm repo add guestbook-repo https://<YOUR_HARBOR_DOMAIN>/chartrepo/guestbook --username=<HARBOR_USER_NAME> --password=<HARBOR_PASSWORD>
+
+######################################################################
+# Package Helm Chart 
+######################################################################
+$ git clone https://github.com/kin3303/guestbook.git
+$  ls
+guestbook
+$ helm package guestbook/
+Successfully packaged chart and saved it to: /home/ec2-user/helm_test/helm_test/guestbook-0.1.0.tgz
+$  ls
+guestbook guestbook-0.1.0.tgz
+
+######################################################################
+# Upload Helm Chart 
+######################################################################
+$  helm cm-push guestbook-0.1.0.tgz  guestbook-repo --username=<HARBOR_USER_NAME> --password=<HARBOR_PASSWORD>
+ 
 ```
 
 
