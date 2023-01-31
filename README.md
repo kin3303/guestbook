@@ -146,7 +146,7 @@ $  helm cm-push guestbook-0.1.0.tgz  guestbook-repo --username=<HARBOR_USER_NAME
 $ cd ..
 $ mkdir helm-install-test
 $ cd helm-install-test
-$  helm repo update
+$ helm repo update
 $ helm search repo guestbook-repo -l 
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION                
 guestbook-repo/guestbook        0.1.0           5.0.0          A Helm chart for Kubernetes
