@@ -221,10 +221,10 @@ POD LOGS: my-guestbook-test-frontend-connection
 $ kubectl exec -n gs -it my-guestbook-redis-master-0  --  redis-cli -h localhost save
 $ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n gs
 $ kubectl get pods -n gs
-$ helm upgrade  my-guestbook guestbook-repo/guestbook -n gs   --wait  
+$ helm upgrade  my-guestbook guestbook-repo/guestbook -n gs --wait  
 $ kubectl exec -n gs -it my-guestbook-redis-master-0 -- /bin/sh
 DB 백업 확인
-$ kubectl port-forward service/my-guestbook   -n gs  8080:80 --address 0.0.0.0
+$ kubectl port-forward service/my-guestbook -n gs 8080:80 --address 0.0.0.0
 데이터 추가 입력
 
 ######################################################################
