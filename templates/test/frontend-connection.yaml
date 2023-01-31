@@ -11,6 +11,8 @@ spec:
   containers:
     - name: test-frontend-connection
       image: curlimages/curl:7.68.0
-      command: ["/bin/sh", "-c"]
-      args: ["curl {{ include "guestbook.fullname" . }}"]
+      command:
+        - /bin/sh
+        - -c 
+        - curl {{ include "guestbook.fullname" . }}
   restartPolicy: Never
