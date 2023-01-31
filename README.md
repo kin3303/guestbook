@@ -69,7 +69,32 @@ $  aws eks --region ap-northeast-2 update-kubeconfig --name <CLUSTER_NAME>
 $  chmod 600  ~/.kube/config
 ```
 
-### Step 3. Chart 패키지 및 Harbor 에 업로드
+### Step 3. Chart 정적 테스트
+
+- helm lint 명령을 통해 Chart 에 이상이 없는지 검사 
+- yaml lint 명령을 통해 Chart Yaml 에 이상이 없는지 검사
+
+```console
+$ git clone https://github.com/kin3303/guestbook.git
+
+######################################################################
+# yamllint 검출 설정
+######################################################################
+$ sudo tee  .yamllint > /dev/null <<EOF
+extends: default
+rules:
+  line-length:
+    max: 150
+  trailing-spaces:
+    level: warning
+  key-duplicates:
+    level: error
+EOF
+
+$  helm template my-guestbook guestbook --namespace gs  | yamllint -
+```
+
+### Step 4. Chart 패키지 및 Harbor 에 업로드
 
 - 먼저 Harbor 레포지토리에 guestbook 이라는 프로젝트를 만든다.
 - Chart 패키징 및 패키징된 Chart 를 Harbor 에 업로드 한다. (아래 코드 참조)
@@ -87,7 +112,7 @@ $ git clone https://github.com/kin3303/guestbook.git
 $  ls
 guestbook
 $ helm package guestbook/
-Successfully packaged chart and saved it to: /home/ec2-user/helm_test/helm_test/guestbook-0.1.0.tgz
+Successfully packaged chart and saved it to: /home/ec2-user/helm_test/guestbook-0.1.0.tgz
 $  ls
 guestbook guestbook-0.1.0.tgz
 
