@@ -149,7 +149,7 @@ $ cd helm-install-test
 $  helm repo update
 $ helm search repo guestbook-repo -l 
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION                
-guestbook-repo/guestbook        0.1.0                5.0.0                       A Helm chart for Kubernetes
+guestbook-repo/guestbook        0.1.0           5.0.0          A Helm chart for Kubernetes
 
 ######################################################################
 # 차트 설치
