@@ -72,13 +72,22 @@ $  chmod 600  ~/.kube/config
 ### Step 3. Chart 정적 테스트
 
 - helm lint 명령을 통해 Chart 에 이상이 없는지 검사 
+
+```console
+$  helm lint guestbook 
+==> Linting guestbook
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+```
+
 - yaml lint 명령을 통해 Chart Yaml 에 이상이 없는지 검사
 
 ```console
 $ git clone https://github.com/kin3303/guestbook.git
 
 ######################################################################
-# yamllint 검출 설정
+# yamllint 설정
 ######################################################################
 $ sudo tee  .yamllint > /dev/null <<EOF
 extends: default
@@ -91,6 +100,9 @@ rules:
     level: error
 EOF
 
+######################################################################
+# yamllint 실행
+######################################################################
 $  helm template my-guestbook guestbook --namespace gs  | yamllint -
 ```
 
