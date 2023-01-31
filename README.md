@@ -120,7 +120,6 @@ $ helm repo add guestbook-repo https://<YOUR_HARBOR_DOMAIN>/chartrepo/guestbook 
 ######################################################################
 # Package Helm Chart 
 ######################################################################
-$ git clone https://github.com/kin3303/guestbook.git
 $  ls
 guestbook
 $ helm package guestbook/
