@@ -11,6 +11,8 @@ spec:
   containers:
     - name: test-backend-connection
       image: redis:alpine3.11
-      command: ["/bin/sh", "-c"]
-      args:  ['redis-cli -h {{ template "redis.fullname" . }}-master get {{ template "guestbook.name" . }}']
+      command:
+        - /bin/sh
+        - -c
+        - redis-cli -h {{ template "redis.fullname" . }}-master get {{ template "guestbook.name" . }} 
   restartPolicy: Never
