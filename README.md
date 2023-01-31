@@ -1,7 +1,30 @@
 
 ## Sample Helm Chart
 
+샘플에 사용한 어플리케이션은 아래와 같으며 
+
 - [Guestbook Application](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
+
+차트는 아래 내용으로 구성한다.
+
+- Chart.yaml
+	- 레디스 디펜던시 추가
+- charts/
+	- 레디스 디펜던시 다운로드
+- templates/
+	- deployment.yaml
+		- 방명록 어플리케이션을 배포
+		- https://kubernetes.io/docs/tutorials/stateless-application/guestbook/#creating-the-guestbook-frontend-deployment
+	- ingress.yaml
+		- 클러스터 외부에서 방명록 어플리케이션에 액세스할 수 있는 옵션 제공
+	- serviceaccount.yaml
+		- 방명록 어플리케이션을 위한 전용 서비스 계정을 생성
+	- service.yaml
+		- 방명록 어플리케이션의 여러 인스턴스 간의 부하 분산에 사용
+	- _helpers.tp
+		- 헬름 차트 전반에 걸처 사용될 공통 템플릿 집합을 제공
+	- NOTES.txt
+		- 설치 후 어플리케이션에 액세스하는 데 사용되는 일련의 지침을 제공
 
 ### Step 1. 배포에 필요한 도구 설치
 
