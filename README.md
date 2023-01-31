@@ -264,6 +264,28 @@ $ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
 $ kubectl delete ns gs
 ```
 
+### Reference - Chart 구조
+
+``` 
+$ cd mychart
+$ tree
+.
+├── charts # 헬름 차트가 의존하고 있는 차트가 포함된 디렉토리
+├── Chart.yaml # Chart Version 등을 담고 있는 Chart 메타데이터
+├── templates # Termplate Rendering Engine 을 통해 생성할 Go 템플릿를 포함하는 디렉토리
+│   ├── deployment.yaml # 샘플 리소스
+│   ├── _helpers.tpl # Utility 함수를 저장
+│   ├── hpa.yaml # 샘플 리소스
+│   ├── ingress.yaml # 샘플 리소스
+│   ├── NOTES.txt # 차트 설치 과정에서 사용 지침을 제공하기 위한 파일
+│   ├── serviceaccount.yaml # 샘플 리소스
+│   ├── service.yaml # 샘플 리소스
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml # 차트의 기본값을 포함하고 있는 파일
+└── values.schema.json # 차트의 기본값에 대한 스키마를 JSON 형식으로 포함하고 있는 파일
+```
+
 ### Reference - Helm 주요 커맨드 및 환경 변수 
 
 - 레포지토리 관리
@@ -366,20 +388,5 @@ $ kubectl delete ns gs
 
 ### Reference - Chart Template 함수
 
-- [암호화 및 보안](https://helm.sh/ko/docs/chart_template_guide/function_list/#%ec%95%94%ed%98%b8%ed%99%94-%eb%b0%8f-%eb%b3%b4%ec%95%88-%ed%95%a8%ec%88%98)
-- 날짜
-- 사전
-- 인코딩
-- 파일 경로
-- 쿠버네티스 및 차트
-- 논리 및 흐름 제어
-- 목록
-- 수학
-- 네트워크
-- 리플렉션
-- 정규 표현식
-- 유의적 버전
-- 문자열
-- 형 변환
-- URL
-- UUID
+- helm 템플릿에서 사용가능한  전체 [함수 목록](https://helm.sh/ko/docs/chart_template_guide/function_list/)
+
