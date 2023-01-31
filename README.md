@@ -219,8 +219,7 @@ POD LOGS: my-guestbook-test-frontend-connection
 # 리비전 업그레이드
 ######################################################################
 $ kubectl exec -n gs -it my-guestbook-redis-master-0  --  redis-cli -h localhost save
-$ kubectl scale statefulsets/my-guestbook-redis-master  --replicas=0 -n gs
-$ kubectl scale statefulsets/my-guestbook-redis-replicas --replicas=0 -n gs
+$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n gs
 $ kubectl get pods -n gs
 $ helm upgrade  my-guestbook guestbook-repo/guestbook -n gs   --wait  
 $ kubectl exec -n gs -it my-guestbook-redis-master-0 -- /bin/sh
