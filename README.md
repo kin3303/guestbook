@@ -134,7 +134,7 @@ $  helm cm-push guestbook-0.1.0.tgz  guestbook-repo --username=<HARBOR_USER_NAME
  
 ```
 
-### Step 5. Chart 설치 테스트
+### Step 5. Chart 설치 및 테스트
 
 - 먼저 Harbor 레포지토리에 guestbook 이라는 프로젝트를 만든다.
 - Chart 패키징 및 패키징된 Chart 를 Harbor 에 업로드 한다. (아래 코드 참조)
@@ -158,6 +158,62 @@ $ kubectl create ns gs
 $  helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace gs  --wait
 $ kubectl port-forward service/my-guestbook -n gs  8080:80 --address 0.0.0.0
 http://<호스트_IP>:8080 으로 접속하여 데이터 입력
+
+######################################################################
+# 동적 테스트
+######################################################################
+$ helm test my-guestbook -n gs --logs
+NAME: my-guestbook
+LAST DEPLOYED: Tue Jan 31 14:16:01 2023
+NAMESPACE: gs
+STATUS: deployed
+REVISION: 1
+TEST SUITE:     my-guestbook-test-backend-connection
+Last Started:   Tue Jan 31 14:23:17 2023
+Last Completed: Tue Jan 31 14:23:21 2023
+Phase:          Succeeded
+TEST SUITE:     my-guestbook-test-frontend-connection
+Last Started:   Tue Jan 31 14:23:21 2023
+Last Completed: Tue Jan 31 14:23:25 2023
+Phase:          Succeeded
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace gs -o jsonpath="{.spec.ports[0].nodePort}" services my-guestbook)
+  export NODE_IP=$(kubectl get nodes --namespace gs -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+POD LOGS: my-guestbook-test-backend-connection
+,aa,bb,cc
+
+POD LOGS: my-guestbook-test-frontend-connection
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<html ng-app="redis">
+  <head>
+    <title>Guestbook</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+    <script src="controllers.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.6/ui-bootstrap-tpls.js"></script>
+  </head>
+  <body ng-controller="RedisCtrl">
+    <div style="width: 50%; margin-left: 20px">
+      <h2>Guestbook</h2>
+    <form>
+    <fieldset>
+    <input ng-model="msg" placeholder="Messages" class="form-control" type="text" name="input"><br>
+    <button type="button" class="btn btn-primary" ng-click="controller.onRedis()">Submit</button>
+    </fieldset>
+    </form>
+    <div>
+      <div ng-repeat="msg in messages track by $index">
+        {{msg}}
+      </div>
+    </div>
+    </div>
+  </body>
+</html>
+100   920  100   920    0     0   224k      0 --:--:-- --:--:-- --:--:--  224k
 
 ######################################################################
 # 리비전 업그레이드
