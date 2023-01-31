@@ -363,3 +363,23 @@ $ kubectl delete ns gs
 			- 훅이 성공적으로 실행된 후 훅을 삭제
 		- hook-failed
 			- 실행 중 훅이 실패하면 훅을 삭제
+
+### Reference - Chart Template 함수
+
+- [암호화 및 보안](https://helm.sh/ko/docs/chart_template_guide/function_list/#%ec%95%94%ed%98%b8%ed%99%94-%eb%b0%8f-%eb%b3%b4%ec%95%88-%ed%95%a8%ec%88%98)
+- 날짜
+- 사전
+- 인코딩
+- 파일 경로
+- 쿠버네티스 및 차트
+- 논리 및 흐름 제어
+- 목록
+- 수학
+- 네트워크
+- 리플렉션
+- 정규 표현식
+- 유의적 버전
+- 문자열
+- 형 변환
+- URL
+- UUID
