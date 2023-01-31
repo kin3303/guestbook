@@ -230,8 +230,7 @@ $ kubectl port-forward service/my-guestbook   -n gs  8080:80 --address 0.0.0.0
 ######################################################################
 # 롤백 테스트
 ######################################################################
-$ kubectl scale statefulsets/my-guestbook-redis-master  --replicas=0 -n gs
-$ kubectl scale statefulsets/my-guestbook-redis-replicas --replicas=0 -n gs
+$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n gs
 $ kubectl get pods -n gs
 $ helm rollback my-guestbook 1 -n gs   --wait  
 $ kubectl port-forward service/my-guestbook   -n gs  8080:80 --address 0.0.0.0
