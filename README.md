@@ -319,9 +319,6 @@ $ kubectl delete ns gs
 
 ### Reference - Helm Hook
 
-- 헬름은 install/upgrade/rollback/test 시 템플릿 렌더링 후 쿠버네티스 리소스를 배포하는 수명 주기를 가진다.
-- 이때 헬름 어노테이션과 k8s 의 Job 을 이용하여 훅을 설정할 수 있다.
-
 | 어노테이션 값 | 설명 |
 |----------|----------|
 | pre-install | helm install , 템플릿 렌더링후 리소스가 생성되기 전에 실행된다. |
@@ -334,14 +331,15 @@ $ kubectl delete ns gs
 | post-rollback | helm rollback , 모든 리소스가 수정된 후에 실행된다. |
 | test | helm test, 해당 명령이 호출될 때 실행된다. |
 
-- 기본적으로 헬름 릴리즈의 수명주기는 다음과 같다.
+- 헬름은 install/upgrade/rollback/test 시 템플릿 렌더링 후 쿠버네티스 리소스를 배포하는 수명 주기를 가진다.
+- 이때 헬름 어노테이션과 k8s 의 Job 을 이용하여 훅을 설정할 수 있다.
+- 예를 들어 helm install 시 헬름 릴리즈의 수명주기는 다음과 같다.
 	1. 사용자가 helm install foo 를 실행한다.
 	2. 헬름 라이브러리 설치 API가 호출된다.
 	3. 검증 후, 라이브러리는 foo 템플릿을 렌더링한다.
 	4. 라이브러리는 결과로 나온 리소스를 쿠버네티스에 로드한다.
 	5. 라이브러리는 릴리스 객체(및 다른 데이터)를 클라이언트에 반환한다.
 	6. 클라이언트가 종료된다.
-
 - 이때 pre-install 및 post-install 의 두 훅을 정의하면  헬름 릴리즈의 수명주기는 아래와 같이 변경된다.
 	1. 사용자가 helm install foo 를 실행한다.
 	2. 헬름 라이브러리 설치 API가 호출된다.
@@ -357,3 +355,11 @@ $ kubectl delete ns gs
 	9. 라이브러리는 훅이 "Ready" 될 때까지 기다린다.
 	10. 라이브러리는 릴리스 객체(및 다른 데이터)를 클라이언트에 반환한다.
 	11. 클라이언트가 종료된다.
+- Hook 삭제 정책
+	- helm.sh/hook-delete-policy 어노테이션을 통해서 훅을 정의한 Job 을 삭제할 시기를 결정할 수 있다.
+		- before-hook-creation
+			- 훅이 시작되기 전에 이전 훅을 삭제
+		- hook-succeeded
+			- 훅이 성공적으로 실행된 후 훅을 삭제
+		- hook-failed
+			- 실행 중 훅이 실패하면 훅을 삭제
