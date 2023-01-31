@@ -323,7 +323,7 @@ $ kubectl delete ns gs
 - 이때 헬름 어노테이션과 k8s 의 Job 을 이용하여 훅을 설정할 수 있다.
 
 | 어노테이션 값 | 설명 |
-|----------|----------|----------|
+|----------|----------|
 | pre-install | helm install , 템플릿 렌더링후 리소스가 생성되기 전에 실행된다. |
 | post-install | helm install , 쿠버네티스에 모든 리소스가 로드된 후에 실행된다. |
 | pre-delete | helm uninstall , 쿠버네티스에서 리소스가 삭제되기 전에 실행된다. |
