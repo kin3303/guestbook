@@ -134,6 +134,61 @@ $  helm cm-push guestbook-0.1.0.tgz  guestbook-repo --username=<HARBOR_USER_NAME
  
 ```
 
+### Step 5. Chart 설치 테스트
+
+- 먼저 Harbor 레포지토리에 guestbook 이라는 프로젝트를 만든다.
+- Chart 패키징 및 패키징된 Chart 를 Harbor 에 업로드 한다. (아래 코드 참조)
+
+```console
+######################################################################
+# 레포지터리 업데이트 및 확인
+######################################################################
+$ cd ..
+$ mkdir helm-install-test
+$ cd helm-install-test
+$  helm repo update
+$ helm search repo guestbook-repo -l 
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION                
+guestbook-repo/guestbook        0.1.0                5.0.0                       A Helm chart for Kubernetes
+
+######################################################################
+# 차트 설치
+######################################################################
+$ kubectl create ns gs
+$  helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace gs  --wait
+$ kubectl port-forward service/my-guestbook -n gs  8080:80 --address 0.0.0.0
+http://<호스트_IP>:8080 으로 접속하여 데이터 입력
+
+######################################################################
+# 리비전 업그레이드
+######################################################################
+$ kubectl exec -n gs -it my-guestbook-redis-master-0  --  redis-cli -h localhost save
+$ kubectl scale statefulsets/my-guestbook-redis-master  --replicas=0 -n gs
+$ kubectl scale statefulsets/my-guestbook-redis-replicas --replicas=0 -n gs
+$ kubectl get pods -n gs
+$ helm upgrade  my-guestbook guestbook-repo/guestbook -n gs   --wait  
+$ kubectl exec -n gs -it my-guestbook-redis-master-0 -- /bin/sh
+DB 백업 확인
+$ kubectl port-forward service/my-guestbook   -n gs  8080:80 --address 0.0.0.0
+데이터 추가 입력
+
+######################################################################
+# 롤백 테스트
+######################################################################
+$ kubectl scale statefulsets/my-guestbook-redis-master  --replicas=0 -n gs
+$ kubectl scale statefulsets/my-guestbook-redis-replicas --replicas=0 -n gs
+$ kubectl get pods -n gs
+$ helm rollback my-guestbook 1 -n gs   --wait  
+$ kubectl port-forward service/my-guestbook   -n gs  8080:80 --address 0.0.0.0
+롤백 확인
+
+######################################################################
+# 리소스 정리
+######################################################################
+$ helm uninstall my-guestbook -n gs 
+$ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
+$ kubectl delete ns gs
+```
 
 ### Reference - Helm 주요 커맨드 및 환경 변수 
 
