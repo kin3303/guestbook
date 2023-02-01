@@ -29,6 +29,7 @@
 - Cluster 와 연결할 클라이언트는 아래와 같이 Docker, kubectl, helm , helm push plugin, yamllint 를 설치해 놓아야 한다.
    - 아래는 ec2 아마존 리눅스 2 인스턴스에 이와 같은 도구를 설치하는다.
    - Helm으로 Harbor에 Chart를 Push하기 위해서는 helm push plugin을 설치해야 push 명령어를 사용할 수 있다.
+- k8s 클러스터에는 Consul, Prometheus, Grafana, Jaeger 를 미리 설치해 놓아야 한다.
 
 ```console 
 $  private_ip=$( curl -Ss -H "X-aws-ec2-metadata-token: $imds_token" 169.254.169.254/latest/meta-data/local-ipv4 )
@@ -262,6 +263,36 @@ $ kubectl port-forward service/my-guestbook -n gs  8080:80 --address 0.0.0.0
 $ helm uninstall my-guestbook -n gs 
 $ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
 $ kubectl delete ns gs
+```
+
+### Step 6 
+
+- Consul, Prometheus, Grafana, Jaeger  확인
+
+``` console 
+######################################################################
+#  Consul 확인
+######################################################################
+$ kubectl port-forward service/consul-server --namespace consul 8501:8501
+https://localhost:8501/ui 
+
+######################################################################
+# Promethues 확인
+######################################################################
+$ kubectl port-forward deploy/prometheus-server 9090:9090
+http://localhost:9090  
+
+######################################################################
+# Grafana 확인
+######################################################################
+$ kubectl port-forward svc/grafana 3000:3000   
+http://localhost:3000 (admin/password)
+
+######################################################################
+# Jaeger 확인
+######################################################################
+$ kubectl port-forward svc/jaeger-query 16686:16686   
+http://localhost:16686 
 ```
 
 ### Reference - Chart 구조
