@@ -271,26 +271,26 @@ $ kubectl delete ns gs
 ######################################################################
 #  Consul 확인
 ######################################################################
-$ kubectl port-forward service/consul-server --namespace consul 8501:8501
-https://localhost:8501/ui 
+$ kubectl port-forward service/consul-server --namespace consul 8501:8501 --address 0.0.0.0
+https://<CLIENT_IP>:8501/ui 
 
 ######################################################################
 # Promethues 확인
 ######################################################################
-$ kubectl port-forward deploy/prometheus-server 9090:9090
-http://localhost:9090  
+$ kubectl port-forward deploy/prometheus-server 9090:9090 --address 0.0.0.0
+http://<CLIENT_IP>:9090  
 
 ######################################################################
 # Grafana 확인
 ######################################################################
-$ kubectl port-forward svc/grafana 3000:3000   
-http://localhost:3000 (admin/password)
+$ kubectl port-forward svc/grafana 3000:3000 --address 0.0.0.0
+http://<CLIENT_IP>:3000 (admin/password)
 
 ######################################################################
 # Jaeger 확인
 ######################################################################
-$ kubectl port-forward svc/jaeger-query 16686:16686   
-http://localhost:16686 
+$ kubectl port-forward svc/jaeger-query 16686:16686 --address 0.0.0.0   
+http://<CLIENT_IP>:16686 
 ```
 
 ### Reference - Chart 구조
