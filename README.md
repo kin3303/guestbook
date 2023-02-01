@@ -265,9 +265,7 @@ $ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
 $ kubectl delete ns gs
 ```
 
-### Step 6 
-
-- Consul, Prometheus, Grafana, Jaeger  확인
+### Step 6. Consul, Prometheus, Grafana, Jaeger  확인
 
 ``` console 
 ######################################################################
