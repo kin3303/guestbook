@@ -124,7 +124,17 @@ EOF
 ######################################################################
 # yamllint 실행
 ######################################################################
-$  helm template my-guestbook guestbook --namespace gs  | yamllint -
+$ helm template my-guestbook guestbook --namespace gs  | yamllint -
+  41:18     warning  trailing spaces  (trailing-spaces)
+  271:1     warning  trailing spaces  (trailing-spaces)
+  341:1     warning  trailing spaces  (trailing-spaces)
+  450:1     warning  trailing spaces  (trailing-spaces)
+  456:1     warning  trailing spaces  (trailing-spaces)
+  468:1     warning  trailing spaces  (trailing-spaces)
+  600:1     warning  trailing spaces  (trailing-spaces)
+  606:1     warning  trailing spaces  (trailing-spaces)
+  618:1     warning  trailing spaces  (trailing-spaces)
+$ cat -n <(helm template my-guestbook guestbook --namespace gs)
 ```
 
 ### Step 4. Chart 패키지 및 Harbor 에 업로드
