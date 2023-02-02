@@ -117,3 +117,6 @@ redis:
       consul.hashicorp.com/connect-inject: "true"
   commonConfiguration: |- 
     appendonly no
+
+consul:
+  enabled: false
