@@ -80,6 +80,11 @@ $  helm plugin install https://github.com/chartmuseum/helm-push
 $  sudo yum install -y python3-pip
 $  sudo pip3 install yamllint
 $  yamllint --version
+
+######################################################################
+# Download Sources
+######################################################################
+$  git clone https://github.com/kin3303/guestbook.git
 ```
 
 ### Step 2. Cluster 와 연결
