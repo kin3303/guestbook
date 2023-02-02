@@ -322,6 +322,13 @@ $ helm install my-guestbook guestbook-repo/guestbook --values values-consul.yaml
 ######################################################################
 $ kubectl get ingressgateway ingress-gateway -n consul  >> SYNCED == true 확인
 $ kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0
+
+######################################################################
+# 리소스 정리
+######################################################################
+$ helm uninstall my-guestbook -n plateer 
+$ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n plateer
+$ kubectl delete ns plateer
 ```
 
 
