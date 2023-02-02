@@ -114,6 +114,6 @@ redis:
     persistence:
       enabled: true
     podAnnotations:
-      consul.hashicorp.com/connect-inject: "true"        
+      consul.hashicorp.com/connect-inject: "true"
   commonConfiguration: |- 
     appendonly no
