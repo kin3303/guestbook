@@ -180,8 +180,8 @@ $  helm cm-push guestbook-0.1.0.tgz  guestbook-repo --username=<HARBOR_USER_NAME
 # 레포지터리 업데이트 및 확인
 ######################################################################
 $ cd ..
-$ mkdir helm-install-test
-$ cd helm-install-test
+$ mkdir guestbook-from-harbor
+$ cd guestbook-from-harbor
 $ helm repo update
 $ helm search repo guestbook-repo -l 
 NAME                            CHART VERSION   APP VERSION     DESCRIPTION                
