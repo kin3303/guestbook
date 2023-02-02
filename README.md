@@ -309,10 +309,8 @@ $ kubectl port-forward svc/jaeger-query 16686:16686 --address 0.0.0.0
 http://<CLIENT_IP>:16686 
 
 ######################################################################
-# Guestbook 신규배포
+# Guestbook 배포
 ######################################################################
-$ helm uninstall my-guestbook -n gs  
-$ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
 $ helm install my-guestbook guestbook -n gs  -f guestbook/values-consul.yaml --wait
 
 ######################################################################
