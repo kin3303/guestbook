@@ -129,7 +129,7 @@ EOF
 ######################################################################
 # yamllint 실행
 ######################################################################
-$ helm template my-guestbook guestbook --namespace gs  | yamllint -
+$ helm template my-guestbook guestbook --namespace plateer  | yamllint -
   41:18     warning  trailing spaces  (trailing-spaces)
   271:1     warning  trailing spaces  (trailing-spaces)
   341:1     warning  trailing spaces  (trailing-spaces)
@@ -139,7 +139,7 @@ $ helm template my-guestbook guestbook --namespace gs  | yamllint -
   600:1     warning  trailing spaces  (trailing-spaces)
   606:1     warning  trailing spaces  (trailing-spaces)
   618:1     warning  trailing spaces  (trailing-spaces)
-$ cat -n <(helm template my-guestbook guestbook --namespace gs)
+$ cat -n <(helm template my-guestbook guestbook --namespace plateer)
 ```
 
 ### Step 4. Chart 패키지 및 Harbor 에 업로드
@@ -190,19 +190,19 @@ guestbook-repo/guestbook        0.1.0           5.0.0          A Helm chart for 
 ######################################################################
 # 차트 설치
 ######################################################################
-$ kubectl create ns gs
-$ helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace gs  --wait
-$ kubectl get all -n gs
-$ kubectl port-forward service/my-guestbook -n gs  8080:80 --address 0.0.0.0
+$ kubectl create ns plateer
+$ helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace plateer  --wait
+$ kubectl get all -n plateer
+$ kubectl port-forward service/my-guestbook -n plateer  8080:80 --address 0.0.0.0
 http://<호스트_IP>:8080 으로 접속하여 데이터 입력
 
 ######################################################################
 # 동적 테스트
 ######################################################################
-$ helm test my-guestbook -n gs --logs
+$ helm test my-guestbook -n plateer --logs
 NAME: my-guestbook
 LAST DEPLOYED: Tue Jan 31 14:16:01 2023
-NAMESPACE: gs
+NAMESPACE: plateer
 STATUS: deployed
 REVISION: 1
 TEST SUITE:     my-guestbook-test-backend-connection
@@ -215,8 +215,8 @@ Last Completed: Tue Jan 31 14:23:25 2023
 Phase:          Succeeded
 NOTES:
 1. Get the application URL by running these commands:
-  export NODE_PORT=$(kubectl get --namespace gs -o jsonpath="{.spec.ports[0].nodePort}" services my-guestbook)
-  export NODE_IP=$(kubectl get nodes --namespace gs -o jsonpath="{.items[0].status.addresses[0].address}")
+  export NODE_PORT=$(kubectl get --namespace plateer -o jsonpath="{.spec.ports[0].nodePort}" services my-guestbook)
+  export NODE_IP=$(kubectl get nodes --namespace plateer -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
 
 POD LOGS: my-guestbook-test-backend-connection
@@ -255,30 +255,30 @@ POD LOGS: my-guestbook-test-frontend-connection
 ######################################################################
 # 리비전 업그레이드
 ######################################################################
-$ kubectl exec -n gs -it my-guestbook-redis-master-0  --  redis-cli -h localhost save
-$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n gs
-$ kubectl get pods -n gs
-$ helm upgrade  my-guestbook guestbook-repo/guestbook -n gs --wait  
-$ kubectl exec -n gs -it my-guestbook-redis-master-0 -- /bin/sh
+$ kubectl exec -n plateer -it my-guestbook-redis-master-0  --  redis-cli -h localhost save
+$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n plateer
+$ kubectl get pods -n plateer
+$ helm upgrade  my-guestbook guestbook-repo/guestbook -n plateer --wait  
+$ kubectl exec -n plateer -it my-guestbook-redis-master-0 -- /bin/sh
 DB 백업 확인
-$ kubectl port-forward service/my-guestbook -n gs 8080:80 --address 0.0.0.0
+$ kubectl port-forward service/my-guestbook -n plateer 8080:80 --address 0.0.0.0
 데이터 추가 입력
 
 ######################################################################
 # 롤백 테스트
 ######################################################################
-$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n gs
-$ kubectl get pods -n gs
-$ helm rollback my-guestbook 1 -n gs --wait  
-$ kubectl port-forward service/my-guestbook -n gs  8080:80 --address 0.0.0.0
+$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n plateer
+$ kubectl get pods -n plateer
+$ helm rollback my-guestbook 1 -n plateer --wait  
+$ kubectl port-forward service/my-guestbook -n plateer  8080:80 --address 0.0.0.0
 롤백 확인
 
 ######################################################################
 # 리소스 정리
 ######################################################################
-$ helm uninstall my-guestbook -n gs 
-$ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
-$ kubectl delete ns gs
+$ helm uninstall my-guestbook -n plateer 
+$ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n plateer
+$ kubectl delete ns plateer
 ```
 
 ### Step 6. Guestbook with consul
@@ -311,7 +311,8 @@ http://<CLIENT_IP>:16686
 ######################################################################
 # Guestbook 배포
 ######################################################################
-$ helm install my-guestbook guestbook -n gs  -f guestbook/values-consul.yaml --wait
+$ kubectl delete ns plateer
+$ helm install my-guestbook guestbook -n plateer  -f guestbook/values-consul.yaml --wait
 
 ######################################################################
 # IngressGateway 에서 접근
