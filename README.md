@@ -313,6 +313,7 @@ http://<CLIENT_IP>:16686
 ######################################################################
 $ helm pull guestbook-repo/guestbook --version 0.1.0 --untar
 $ mv guestbook/values-consul.yaml values-consul.yaml 
+$ rm -rf guestbook
 $ kubectl create ns plateer
 $ helm install my-guestbook guestbook -n plateer  -f values-consul.yaml --wait
 
