@@ -191,7 +191,8 @@ guestbook-repo/guestbook        0.1.0           5.0.0          A Helm chart for 
 # 차트 설치
 ######################################################################
 $ kubectl create ns gs
-$  helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace gs  --wait
+$ helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace gs  --wait
+$ kubectl get all -n gs
 $ kubectl port-forward service/my-guestbook -n gs  8080:80 --address 0.0.0.0
 http://<호스트_IP>:8080 으로 접속하여 데이터 입력
 
