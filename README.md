@@ -100,6 +100,8 @@ $  chmod 600  ~/.kube/config
 - helm lint 명령을 통해 Chart 에 이상이 없는지 검사 
 
 ```console
+$ ls
+guestbook
 $  helm lint guestbook 
 ==> Linting guestbook
 [INFO] Chart.yaml: icon is recommended
@@ -110,8 +112,6 @@ $  helm lint guestbook
 - yaml lint 명령을 통해 Chart Yaml 에 이상이 없는지 검사
 
 ```console
-$ git clone https://github.com/kin3303/guestbook.git
-
 ######################################################################
 # yamllint 설정
 ######################################################################
