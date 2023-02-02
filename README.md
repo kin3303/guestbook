@@ -311,7 +311,7 @@ http://<CLIENT_IP>:16686
 ######################################################################
 # Guestbook 배포
 ######################################################################
-$ kubectl delete ns plateer
+$ kubectl create ns plateer
 $ helm install my-guestbook guestbook -n plateer  -f guestbook/values-consul.yaml --wait
 
 ######################################################################
