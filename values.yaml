@@ -114,3 +114,6 @@ redis:
       enabled: true
   commonConfiguration: |- 
     appendonly no
+
+consul:
+  enabled: false
