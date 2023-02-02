@@ -275,7 +275,7 @@ $ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n gs
 $ kubectl delete ns gs
 ```
 
-### Step 6. Consul, Prometheus, Grafana, Jaeger  확인
+### Step 6. Guestbook with consul
 
 ``` console 
 ######################################################################
@@ -301,7 +301,28 @@ http://<CLIENT_IP>:3000 (admin/password)
 ######################################################################
 $ kubectl port-forward svc/jaeger-query 16686:16686 --address 0.0.0.0   
 http://<CLIENT_IP>:16686 
+
+######################################################################
+# Guestbook 신규배포시 아래 수행
+######################################################################
+$ helm install my-guestbook guestbook -n gs  -f guestbook/values-consul.yaml --wait
+<기존에서 업그레이드시>
+
+######################################################################
+# Guestbook 이미 배포한 경우 아래 수행
+######################################################################
+$ kubectl exec -n gs -it my-guestbook-redis-master-0  --  redis-cli -h localhost save
+$ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n gs
+$ kubectl get pods -n gs
+$ helm upgrade my-guestbook guestbook -n gs  -f guestbook/values-consul.yaml --wait
+
+######################################################################
+# IngressGateway 에서 접근
+######################################################################
+$ kubectl get ingressgateway ingress-gateway -n consul  >> SYNCED == true 확인
+$ kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0
 ```
+
 
 ### Reference - Chart 구조
 
