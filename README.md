@@ -311,8 +311,11 @@ http://<CLIENT_IP>:16686
 ######################################################################
 # Guestbook 배포
 ######################################################################
+
+$ helm pull guestbook-repo/guestbook --version 0.1.0 --untar
+$ mv guestbook/values-consul.yaml values-consul.yaml 
 $ kubectl create ns plateer
-$ helm install my-guestbook guestbook -n plateer  -f guestbook/values-consul.yaml --wait
+$ helm install my-guestbook guestbook -n plateer  -f values-consul.yaml --wait
 
 ######################################################################
 # IngressGateway 에서 접근
