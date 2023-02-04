@@ -27,8 +27,7 @@ serviceAccount:
   name: ""
 
 # -- Annotations to add to the pod.
-podAnnotations:
-  consul.hashicorp.com/connect-inject: "true"
+podAnnotations: {}
 
 # -- Security context for the pod.
 podSecurityContext: {}
@@ -113,10 +112,10 @@ redis:
   master:
     persistence:
       enabled: true
-    podAnnotations:
-      consul.hashicorp.com/connect-inject: "true"
   commonConfiguration: |- 
     appendonly no
+  consul:
+    enabled: true
 
 consul:
   enabled: true

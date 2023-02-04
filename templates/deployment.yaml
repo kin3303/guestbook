@@ -13,10 +13,14 @@ spec:
       {{- include "guestbook.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
+        {{- if .Values.consul.enabled }}
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/connect-service-upstreams: '{{ template "redis.fullname" . }}-master:{{ .Values.redis.master.service.ports.redis }}'
+        {{- end }}      
       labels:
         {{- include "guestbook.selectorLabels" . | nindent 8 }}
     spec:
@@ -54,10 +58,13 @@ spec:
             - name: {{"REDIS_LEADER_SERVICE_HOST"}}
               value: {{ template "redis.fullname" . }}-master
             {{- end }}
-            {{- if .Values.redis.enabled }}
+            {{- if and (eq .Values.redis.architecture "standalone") (.Values.redis.enabled) }}
             - name: {{"REDIS_FOLLOWER_SERVICE_HOST"}}
               value: {{ template "redis.fullname" . }}-master
-            {{- end }}
+            {{- else if and (ne .Values.redis.architecture "replication") (.Values.redis.enabled) }}
+            - name: {{"REDIS_FOLLOWER_SERVICE_HOST"}}
+              value: {{ template "redis.fullname" . }}-replicas
+            {{- end }}            
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
