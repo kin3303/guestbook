@@ -22,8 +22,10 @@ git clone https://github.com/kin3303/guestbook.git
 kubectl create ns plateer
 helm install my-guestbook guestbook/  --namespace plateer  --values guestbook/values-consul.yaml  --wait
 kubectl port-forward service/consul-ingress-gateway -n consul 9080:8080 --address 0.0.0.0
+kubectl port-forward service/consul-server --namespace consul 8501:8501 --address 0.0.0.0
 
-http:<<CLIENT_IP>>:8080 접속하여 DB 쓰여지는지 확인
+http:<<CLIENT_IP>>:8080
+https://<CLIENT_IP>:8501/ui 
 
 helm uninstall my-guestbook -n plateer 
 kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n plateer
