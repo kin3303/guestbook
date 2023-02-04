@@ -24,6 +24,17 @@ helm install my-guestbook guestbook/  --namespace plateer  --values guestbook/va
 kubectl port-forward service/consul-ingress-gateway -n consul 9080:8080 --address 0.0.0.0
 kubectl port-forward service/consul-server --namespace consul 8501:8501 --address 0.0.0.0
 
+ kubectl get proxydefaults global -n consul
+ kubectl rollout restart deploy/consul-ingress-gateway -n consul
+ kubectl rollout restart deploy/my-guestbook
+ kubectl rollout restart statefulset/my-guestbook-redis-master
+ kubectl rollout status deploy/consul-ingress-gateway --watch -n consul
+ kubectl rollout status deploy/my-guestbook --watch -n consul
+ kubectl rollout status statefulset/my-guestbook-redis-master --watch -n consul 
+ 
+ kubectl port-forward service/consul-ingress-gateway -n consul 9080:8080 --address 0.0.0.0
+ kubectl port-forward service/consul-server --namespace consul 8501:8501 --address 0.0.0.0
+
 http:<<CLIENT_IP>>:8080
 https://<CLIENT_IP>:8501/ui 
 
