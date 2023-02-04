@@ -21,12 +21,12 @@ values-consul.yaml 사용
 git clone https://github.com/kin3303/guestbook.git
 
 # 배포
-kubectl create ns plateer
-helm install my-guestbook guestbook/  --namespace plateer  --values guestbook/values-consul.yaml  --wait
+ kubectl create ns plateer
+ helm install my-guestbook guestbook/  --namespace plateer  --values guestbook/values-consul.yaml  --wait
 
 # 배포된 릴리즈 확인
-$ helm ls 
-$ helm get values <RELEASE_NAME>
+ helm ls 
+ helm get values <RELEASE_NAME>
 
 # 서비스 변경시 재시작 
  kubectl rollout restart deploy/consul-ingress-gateway -n consul
@@ -44,7 +44,7 @@ $ helm get values <RELEASE_NAME>
  https://<CLIENT_IP>:8501/ui 
 
 # 릴리즈 
-helm uninstall my-guestbook -n plateer 
-kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n plateer
-kubectl delete ns plateer
+ helm uninstall my-guestbook -n plateer 
+ kubectl delete pvc -l  app.kubernetes.io/instance=my-guestbook  -n plateer
+ kubectl delete ns plateer
 ```
