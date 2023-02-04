@@ -21,7 +21,7 @@ values-consul.yaml 사용
 git clone https://github.com/kin3303/guestbook.git
 kubectl create ns plateer
 helm install my-guestbook guestbook/  --namespace plateer  --values guestbook/values-consul.yaml  --wait
-kubectl port-forward service/consul-ingress-gateway -n plateer 9080:8080 --address 0.0.0.0
+kubectl port-forward service/consul-ingress-gateway -n consul 9080:8080 --address 0.0.0.0
 
 http:<<CLIENT_IP>>:8080 접속하여 DB 쓰여지는지 확인
 
