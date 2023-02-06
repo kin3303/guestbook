@@ -315,8 +315,6 @@ $ helm pull guestbook-repo/guestbook --version 0.1.0 --untar
 $ mv guestbook/values-consul.yaml values-consul.yaml 
 $ rm -rf guestbook
 $ kubectl create ns plateer
-
->> $ helm upgrade my-guestbook guestbook-repo/guestbook --values values-consul.yaml --version 0.1.0 --namespace plateer --wait 
 $ helm install my-guestbook guestbook-repo/guestbook --values values-consul.yaml --version 0.1.0 --namespace plateer  --wait
 
 ######################################################################
