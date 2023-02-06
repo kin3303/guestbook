@@ -2,11 +2,12 @@
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: IngressGateway
 metadata:
-  name:  {{ include "guestbook.fullname" . }}
+  name: ingress-gateway
+  namespace: consul
 spec:
   listeners:
-    - port: 8080 
-      protocol: http 
+    - port: 8080
+      protocol: http
       services:
         - name: {{ include "guestbook.fullname" . }}
           hosts: ["*"]
