@@ -324,6 +324,8 @@ $ kubectl get ingressgateway my-guestbook -n plateer  >> SYNCED == true 확인
 $ kubectl get serviceresolver my-guestbook -n plateer >> SYNCED == true 확인
 $ kubectl get servicesplitter my-guestbook -n plateer >> SYNCED == true 확인
 $ kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0
+#      http://localhost:8080  >> 모두 V1 으로 접근
+#      http://localhost:8080?canary=true >> 모두 V2 로 접근
 
 ######################################################################
 # 리소스 정리
