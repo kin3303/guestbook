@@ -328,6 +328,102 @@ $ kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --addr
 #      http://<CLIENT_IP>:8080?canary=true >> 모두 V2 로 접근
 
 ######################################################################
+# Prometheus 에서 매트릭 확인
+######################################################################
+# http://<CLIENT_IP>:9090 접속하여 아래와 같이 매트릭 조회
+
+envoy_http_downstream_rq_completed{
+  consul_source_service="my-guestbook"
+}
+
+sum(
+  rate(
+    envoy_http_downstream_rq_completed{
+      consul_source_service="my-guestbook"
+    }[5m]
+  )
+) 
+
+######################################################################
+# Grafana 대시보드 생성 
+######################################################################
+# http://<CLIENT_IP>:3000 (admin/password) 접속하여 대시보드 생성 작업 수행
+
++ -> Dashboard : 대시보드 생성
+
+Dashboard Settings-> Variables
+    Name : Service
+    Query : label_values(consul_source_service)
+
+Add a new panel - RPS 
+  sum(
+    rate(
+      envoy_http_downstream_rq_completed{
+        consul_source_service="$Service"
+      }[$__rate_interval]
+    )
+  ) 
+  
+Add a new panel - Error(%) 
+  sum(
+    rate(
+      envoy_http_downstream_rq_xx{
+        consul_source_service="$Service",
+        envoy_response_code_class="5"
+      }[$__rate_interval]
+    )
+  ) /
+  sum(
+    rate(
+      envoy_http_downstream_rq_completed{
+        consul_source_service="$Service"
+      }[$__rate_interval]
+    )
+  )
+  
+Add a new panel - Latency 
+  histogram_quantile(
+    0.5,
+    sum(
+      rate(
+        envoy_http_downstream_rq_time_bucket{
+          consul_source_service="$Service"
+        }[$__rate_interval]
+      )
+    ) by (le)
+  )  
+  
+  histogram_quantile(
+    0.99,
+    sum(
+      rate(
+        envoy_http_downstream_rq_time_bucket{
+          consul_source_service="$Service"
+        }[$__rate_interval]
+      )
+    ) by (le)
+  )  
+
+######################################################################
+# Grafana & Consul 연동
+######################################################################
+ui_dashboard_url_templates 에 ID 적절히 넣어 URL Template 완성한 후 terraform apply
+
+App
+  kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0  
+  http://localhost:8080 
+
+Grafana
+   kubectl port-forward svc/grafana 3000:3000   
+   http://localhost:3000
+
+Consul UI 
+  kubectl port-forward service/consul-server --namespace consul 8501:8501
+  https://localhost:8501/ui
+  Grafana 열리는지 확인
+
+
+######################################################################
 # 리소스 정리
 ######################################################################
 $ helm uninstall my-guestbook -n plateer 
