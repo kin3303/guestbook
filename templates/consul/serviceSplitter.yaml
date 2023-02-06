@@ -16,9 +16,9 @@ metadata:
   name: {{ include "guestbook.fullname" . }}
 spec:
   splits:
-    - weight: 100
+    - weight: 50
       serviceSubset: "v1"
-    - weight: 0
+    - weight: 50
       serviceSubset: "v2"
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
