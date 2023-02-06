@@ -320,7 +320,7 @@ $ helm install my-guestbook guestbook-repo/guestbook --values values-consul.yaml
 ######################################################################
 # IngressGateway 에서 접근
 ######################################################################
-$ kubectl get ingressgateway my-guestbook -n plateer  >> SYNCED == true 확인
+$ kubectl get ingressgateway ingress-gateway -n consul  >> SYNCED == true 확인
 $ kubectl get serviceresolver my-guestbook -n plateer >> SYNCED == true 확인
 $ kubectl get servicesplitter my-guestbook -n plateer >> SYNCED == true 확인
 $ kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0
