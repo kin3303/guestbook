@@ -1,0 +1,37 @@
+{{- if .Values.consul.enabled }}
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: frontend
+spec:
+  destination:
+    name: {{ include "guestbook.fullname" . }}
+  sources:
+    - name: ingress-gateway
+      permissions:
+        - http:
+            pathPrefix: / 
+          action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: backend
+spec:
+  destination:
+    name: {{ template "redis.fullname" . }}-master 
+  sources:
+    - name: {{ include "guestbook.fullname" . }}
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: deny-all
+spec:
+  destination:
+    name: "*"
+  sources:
+    - name: "*" 
+      action: deny 
+{{- end }}
