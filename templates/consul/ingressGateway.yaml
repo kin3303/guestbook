@@ -6,9 +6,9 @@ metadata:
   namespace: consul 
 spec:
   listeners:
-  - port: 8080 
-    protocol: http 
-    services: 
-    - name: {{ include "guestbook.fullname" . }}
-      hosts: ["*"]
+    - port: 8080 
+      protocol: http 
+      services:
+        - name: {{ include "guestbook.fullname" . }}
+          hosts: ["*"]
 {{- end }}
