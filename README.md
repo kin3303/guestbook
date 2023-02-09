@@ -410,17 +410,9 @@ Add a new panel - Latency
 ######################################################################
 ui_dashboard_url_templates 에 ID 적절히 넣어 URL Template 완성한 후 terraform apply
 
-App
-  kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0  
-  http://localhost:8080 
-
-Grafana
-   kubectl port-forward svc/grafana 3000:3000   
-   http://localhost:3000
-
 Consul UI 
   kubectl port-forward service/consul-server --namespace consul 8501:8501
-  https://localhost:8501/ui
+  https://<CLIENT_IP>:8501/ui
   Grafana 열리는지 확인
 
 
