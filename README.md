@@ -267,6 +267,7 @@ $ kubectl port-forward service/my-guestbook -n plateer 8080:80 --address 0.0.0.0
 ######################################################################
 # 롤백 테스트
 ######################################################################
+$ helm history my-guestbook -n plateer
 $ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n plateer
 $ kubectl get pods -n plateer
 $ helm rollback my-guestbook 1 -n plateer --wait  
