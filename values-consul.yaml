@@ -119,3 +119,12 @@ redis:
 
 consul:
   enabled: true
+
+
+imagenew:
+  # -- Image repository.
+  repository: harbor.idtplateer.com/guestbook/gb-frontend
+  # -- Image pull policy.
+  pullPolicy: IfNotPresent
+  # -- Image tag.
+  tag: latest
