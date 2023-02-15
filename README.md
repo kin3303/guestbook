@@ -7,8 +7,8 @@
 	- 레디스 디펜던시 추가
 - charts/
 	- 다운로드한 레디스 디펜던시 (아래 명령으로 다운로드 가능하지만 레포지토리가 없어지거나 할 수 있어서 그냥 저장함)
-	        -  helm repo update
-	        -  helm dependency update guestbook 
+	  -  helm repo update
+	  -  helm dependency update guestbook 
 - templates/
 	- deployment.yaml
 		- 방명록 어플리케이션을 배포
