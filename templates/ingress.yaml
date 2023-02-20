@@ -2,13 +2,6 @@
 {{- $fullName := include "guestbook.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  name: {{ $fullName }}
-spec:
-  controller: "ingress.k8s.aws/alb"
----
-apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -19,7 +12,7 @@ metadata:
     {{ tpl .Values.ingress.annotations . | nindent 4 | trim }}
   {{- end }}  
 spec:
-  ingressClassName: {{ $fullName }}
+  ingressClassName: {{ include "guestbook.fullname" . }}-ingress
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
@@ -30,7 +23,7 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
-                  number: 443
+                  number: {{ $svcPort }}
             path: {{ . }}
             pathType: Prefix
           {{- end }}

@@ -107,17 +107,31 @@ imagenew:
 
 ingress:
   enabled: true
-  annotations:
-    alb.ingress.kubernetes.io/load-balancer-name: {{ $fullName }}
+  annotations: |
+    alb.ingress.kubernetes.io/load-balancer-name: 'guestbook'
     alb.ingress.kubernetes.io/scheme: 'internet-facing'
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:ap-northeast-2:960249453675:certificate/3915d0da-6dd2-4384-8fb0-558b25bf1ff4'
-    alb.ingress.kubernetes.io/ssl-policy: 'ELBSecurityPolicy-TLS-1-2-Ext-2018-06'
-    alb.ingress.kubernetes.io/actions.ssl-redirect: '443'
-    external-dns.alpha.kubernetes.io/hostname: 'guestbook.idtplateer.com'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    external-dns.alpha.kubernetes.io/hostname: 'gb.idtplateer.com'
   hosts:
-    - host: 'guestbook.idtplateer.com'
+    - host: 'gb.idtplateer.com'
   tls:
     - hosts:
-      - 'guestbook.idtplateer.com'
+      - 'gb.idtplateer.com'
+
+#ingress:
+#  enabled: true
+#  annotations: |
+#    alb.ingress.kubernetes.io/load-balancer-name: 'guestbook'
+#    alb.ingress.kubernetes.io/scheme: 'internet-facing'
+#    alb.ingress.kubernetes.io/target-type: ip
+#    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
+#    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:ap-northeast-2:960249453675:certificate/3915d0da-6dd2-4384-8fb0-558b25bf1ff4'
+#    alb.ingress.kubernetes.io/ssl-policy: 'ELBSecurityPolicy-TLS-1-2-Ext-2018-06'
+#    alb.ingress.kubernetes.io/actions.ssl-redirect: '443'
+#    external-dns.alpha.kubernetes.io/hostname: 'guestbook.idtplateer.com'
+#  hosts:
+#    - host: 'guestbook.idtplateer.com'
+#  tls:
+#    - hosts:
+#      - 'guestbook.idtplateer.com'

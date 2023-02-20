@@ -1,0 +1,9 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "guestbook.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: {{ include "guestbook.fullname" . }}-ingress
+spec:
+  controller: "ingress.k8s.aws/alb"
+{{- end }}
