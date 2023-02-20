@@ -13,3 +13,22 @@ spec:
       name: http
   selector:
     {{- include "guestbook.selectorLabels" . | nindent 4 }}
+{{- if .Values.consul.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "guestbook.fullname" . }}-v2
+  labels:
+    {{ include "guestbook.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "guestbook.selectorLabels" . | nindent 4 }}
+    version: "v2"
+{{- end }}
