@@ -151,7 +151,7 @@ $ cat -n <(helm template my-guestbook guestbook --namespace plateer)
 ######################################################################
 # Add Repository 
 ######################################################################
-$ helm repo add guestbook-repo https://<YOUR_HARBOR_DOMAIN>/chartrepo/guestbook --username=<HARBOR_USER_NAME> --password=<HARBOR_PASSWORD>
+$ helm repo add guestbook-repo https://harbor.idtplateer.com/chartrepo/guestbook --username=<HARBOR_USER_NAME> --password=<HARBOR_PASSWORD>
 
 ######################################################################
 # Package Helm Chart 
@@ -193,8 +193,7 @@ guestbook-repo/guestbook        0.1.0           5.0.0          A Helm chart for 
 $ kubectl create ns plateer
 $ helm install my-guestbook guestbook-repo/guestbook --version 0.1.0 --namespace plateer  --wait
 $ kubectl get all -n plateer
-$ kubectl port-forward service/my-guestbook -n plateer  8080:80 --address 0.0.0.0
-http://<호스트_IP>:8080 으로 접속하여 데이터 입력
+$ https://gb.idtplateer.com 으로 접속하여 데이터 입력
 
 ######################################################################
 # 동적 테스트
@@ -259,10 +258,7 @@ $ kubectl exec -n plateer -it my-guestbook-redis-master-0  --  redis-cli -h loca
 $ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n plateer
 $ kubectl get pods -n plateer
 $ helm upgrade  my-guestbook guestbook-repo/guestbook -n plateer --wait  
-$ kubectl exec -n plateer -it my-guestbook-redis-master-0 -- /bin/sh
-DB 백업 확인
-$ kubectl port-forward service/my-guestbook -n plateer 8080:80 --address 0.0.0.0
-데이터 추가 입력
+$ https://gb.idtplateer.com 으로 접속하여 데이터 추가 입력
 
 ######################################################################
 # 롤백 테스트
@@ -271,8 +267,7 @@ $ helm history my-guestbook -n plateer
 $ kubectl scale statefulsets -l app.kubernetes.io/instance=my-guestbook --replicas=0 -n plateer
 $ kubectl get pods -n plateer
 $ helm rollback my-guestbook 1 -n plateer --wait  
-$ kubectl port-forward service/my-guestbook -n plateer  8080:80 --address 0.0.0.0
-롤백 확인
+$ https://gb.idtplateer.com 접근하여 롤백 확인
 
 ######################################################################
 # 리소스 정리
@@ -288,22 +283,22 @@ $ kubectl delete ns plateer
 ######################################################################
 #  Consul 확인
 ######################################################################
-$ https://<consul_domain_name>
+$ https://cs.idtplatter.com
 
 ######################################################################
 # Promethues 확인
 ###################################################################### 
-http://<prometheus_domain_name>
+http://ps.idtplatter.com
 
 ######################################################################
 # Grafana 확인
 ######################################################################
-http://<grafana_domain_name>
+http://gf.idtplatter.com
 
 ######################################################################
 # Vault 확인
 ######################################################################
-https://<vault_domain_name>
+https://vt.idtplatter.com
 
 ######################################################################
 # Guestbook 배포
@@ -320,13 +315,13 @@ $ helm install my-guestbook guestbook-repo/guestbook --values values-consul.yaml
 $ kubectl get ingressgateway ingress-gateway -n consul  >> SYNCED == true 확인
 $ kubectl get serviceresolver my-guestbook -n plateer >> SYNCED == true 확인
 $ kubectl get servicesplitter my-guestbook -n plateer >> SYNCED == true 확인 
-# http://<ingress_gateway_domain_name>:8080  >>  V1 로 접근
-# http://<ingress_gateway_domain_name>:8080?canary=true >> 모두 V2 로 접근
+# https://ci.idtplateer.com:8080  >>  V1 로 접근
+# https://ci.idtplateer.com:8080?canary=true >> 모두 V2 로 접근
 
 ######################################################################
 # Prometheus 에서 매트릭 확인
 ######################################################################
-# http://<CLIENT_IP>:9090 접속하여 아래와 같이 매트릭 조회
+# http://ps.idtplatter.com 접속하여 아래와 같이 매트릭 조회
 
 envoy_http_downstream_rq_completed{
   consul_source_service="my-guestbook"
@@ -343,7 +338,7 @@ sum(
 ######################################################################
 # Grafana 대시보드 생성 
 ######################################################################
-# http://<CLIENT_IP>:3000 (admin/password) 접속하여 대시보드 생성 작업 수행
+# http://gf.idtplatter.com (admin/password) 접속하여 대시보드 생성 작업 수행
 
 + -> Dashboard : 대시보드 생성
 
