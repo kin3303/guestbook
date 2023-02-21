@@ -113,22 +113,9 @@ $  helm lint guestbook
 
 ```console
 ######################################################################
-# yamllint 설정
-######################################################################
-$ sudo tee  .yamllint > /dev/null <<EOF
-extends: default
-rules:
-  line-length:
-    max: 150
-  trailing-spaces:
-    level: warning
-  key-duplicates:
-    level: error
-EOF
-
-######################################################################
 # yamllint 실행
 ######################################################################
+$ mv guestbook/.yamllint .yamllint
 $ helm template my-guestbook guestbook --namespace plateer  | yamllint -
   41:18     warning  trailing spaces  (trailing-spaces)
   271:1     warning  trailing spaces  (trailing-spaces)
