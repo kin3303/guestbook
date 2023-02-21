@@ -49,9 +49,6 @@ service:
   # -- Service port.
   port: 80
 
-ingress:
-  enabled: false
-
 # -- Resource requests and limits.
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -107,3 +104,20 @@ imagenew:
   pullPolicy: IfNotPresent
   # -- Image tag.
   tag: latest
+
+
+ingress:
+  enabled: true
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: 'guestbook'
+    alb.ingress.kubernetes.io/scheme: 'internet-facing'
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    external-dns.alpha.kubernetes.io/hostname: 'gb.idtplateer.com'
+  hosts:
+    paths:
+      - 'gb.idtplateer.com' 
+    pathType: Prefix
+  tls:
+    - hosts:
+      - 'gb.idtplateer.com'
