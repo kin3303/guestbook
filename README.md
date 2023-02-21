@@ -288,26 +288,22 @@ $ kubectl delete ns plateer
 ######################################################################
 #  Consul 확인
 ######################################################################
-$ kubectl port-forward service/consul-server --namespace consul 8501:8501 --address 0.0.0.0
-https://<CLIENT_IP>:8501/ui 
+$ https://<consul_domain_name>
 
 ######################################################################
 # Promethues 확인
-######################################################################
-$ kubectl port-forward deploy/prometheus-server 9090:9090 --address 0.0.0.0
-http://<CLIENT_IP>:9090  
+###################################################################### 
+http://<prometheus_domain_name>
 
 ######################################################################
 # Grafana 확인
 ######################################################################
-$ kubectl port-forward svc/grafana 3000:3000 --address 0.0.0.0
-http://<CLIENT_IP>:3000 (admin/password)
+http://<grafana_domain_name>
 
 ######################################################################
-# Jaeger 확인
+# Vault 확인
 ######################################################################
-$ kubectl port-forward svc/jaeger-query 16686:16686 --address 0.0.0.0   
-http://<CLIENT_IP>:16686 
+https://<vault_domain_name>
 
 ######################################################################
 # Guestbook 배포
@@ -323,10 +319,9 @@ $ helm install my-guestbook guestbook-repo/guestbook --values values-consul.yaml
 ######################################################################
 $ kubectl get ingressgateway ingress-gateway -n consul  >> SYNCED == true 확인
 $ kubectl get serviceresolver my-guestbook -n plateer >> SYNCED == true 확인
-$ kubectl get servicesplitter my-guestbook -n plateer >> SYNCED == true 확인
-$ kubectl port-forward service/consul-ingress-gateway -n consul 8080:8080 --address 0.0.0.0
-#      http://<CLIENT_IP>:8080  >>  V1/V2 로 접근
-#      http://<CLIENT_IP>:8080?canary=true >> 모두 V2 로 접근
+$ kubectl get servicesplitter my-guestbook -n plateer >> SYNCED == true 확인 
+# http://<ingress_gateway_domain_name>:8080  >>  V1 로 접근
+# http://<ingress_gateway_domain_name>:8080?canary=true >> 모두 V2 로 접근
 
 ######################################################################
 # Prometheus 에서 매트릭 확인
