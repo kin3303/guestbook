@@ -115,9 +115,10 @@ ingress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
     external-dns.alpha.kubernetes.io/hostname: 'gb.idtplateer.com'
   hosts:
-    paths:
-      - 'gb.idtplateer.com' 
-    pathType: Prefix
+    - host: 'gb.idtplateer.com'
+      paths:
+        - path: "/"
+          pathType: Prefix
   tls:
     - hosts:
       - 'gb.idtplateer.com'
