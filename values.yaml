@@ -108,6 +108,7 @@ imagenew:
 
 ingress:
   enabled: true
+  ingressClassName: 'guestbook'
   annotations:
     alb.ingress.kubernetes.io/load-balancer-name: 'guestbook'
     alb.ingress.kubernetes.io/scheme: 'internet-facing'
