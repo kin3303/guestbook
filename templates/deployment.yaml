@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "guestbook.fullname" . }}-v1
+  name: {{ include "guestbook.fullname" . }}-v2
   labels:
     {{- include "guestbook.labels" . | nindent 4 }}
 spec:
@@ -12,7 +12,7 @@ spec:
     matchLabels:
       {{- include "guestbook.selectorLabels" . | nindent 6 }}
       {{- if .Values.consul.enabled }}
-      version: "v1"
+      version: "v2"
       {{- end }}
   template:
     metadata:
@@ -22,13 +22,13 @@ spec:
       {{- end }}
         {{- if .Values.consul.enabled }}
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/service-meta-version: "v1" 
+        consul.hashicorp.com/service-meta-version: "v2" 
         consul.hashicorp.com/connect-service-upstreams: '{{ template "redis.fullname" . }}-master:{{ .Values.redis.master.service.ports.redis }}'
         {{- end }}      
       labels:
         {{- include "guestbook.selectorLabels" . | nindent 8 }}
         {{- if .Values.consul.enabled }}
-        version: "v1"
+        version: "v2"
         {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -42,7 +42,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.imagenew.repository }}:{{ .Values.imagenew.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -89,7 +89,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "guestbook.fullname" . }}-v2
+  name: {{ include "guestbook.fullname" . }}-v1
   labels:
     {{- include "guestbook.labels" . | nindent 4 }}
 spec:
@@ -99,7 +99,7 @@ spec:
   selector:
     matchLabels:
       {{- include "guestbook.selectorLabels" . | nindent 6 }}
-      version: "v2" 
+      version: "v1" 
   template:
     metadata:
       annotations:
@@ -107,11 +107,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/service-meta-version: "v2" 
+        consul.hashicorp.com/service-meta-version: "v1" 
         consul.hashicorp.com/connect-service-upstreams: '{{ template "redis.fullname" . }}-master:{{ .Values.redis.master.service.ports.redis }}'
       labels:
         {{- include "guestbook.selectorLabels" . | nindent 8 }}
-        version: "v2"
+        version: "v1"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -124,7 +124,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.imagenew.repository }}:{{ .Values.imagenew.tag }}" # "index.docker.io/kin3303/guestbook:v1"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}" 
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
