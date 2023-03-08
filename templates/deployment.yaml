@@ -124,7 +124,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.imagenew.repository }}:{{ .Values.imagenew.tag }}" # "index.docker.io/kin3303/guestbook:v1"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}" # "index.docker.io/kin3303/guestbook:v1"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
