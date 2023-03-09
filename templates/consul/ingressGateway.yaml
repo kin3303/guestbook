@@ -10,20 +10,5 @@ spec:
       protocol: http
       services:
         - name: {{ include "guestbook.fullname" . }}
-          hosts: ["*"]
-  #listeners:
-  #  - name: primary
-  #    port: 8080
-  #    protocol: http
-  #    services:
-  #      - name: {{ include "guestbook.fullname" . }}
-  #        port: 80
-  #        hosts: ["*"]
-  #  - name: secondary
-  #    port: 8081
-  #    protocol: http
-  #    services:
-  #      - name: {{ include "guestbook.fullname" . }}-v2
-  #        port: 80
-  #        hosts: ["*"]          
+          hosts: ["*"]     
 {{- end }}

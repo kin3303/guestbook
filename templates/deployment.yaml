@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "guestbook.fullname" . }}-v1
+  name: {{ include "guestbook.fullname" . }}
   labels:
     {{- include "guestbook.labels" . | nindent 4 }}
 spec:
@@ -11,9 +11,6 @@ spec:
   selector:
     matchLabels:
       {{- include "guestbook.selectorLabels" . | nindent 6 }}
-      {{- if .Values.consul.enabled }}
-      version: "v1"
-      {{- end }}
   template:
     metadata:
       annotations:
@@ -22,14 +19,10 @@ spec:
       {{- end }}
         {{- if .Values.consul.enabled }}
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/service-meta-version: "v1" 
         consul.hashicorp.com/connect-service-upstreams: '{{ template "redis.fullname" . }}-master:{{ .Values.redis.master.service.ports.redis }}'
         {{- end }}      
       labels:
         {{- include "guestbook.selectorLabels" . | nindent 8 }}
-        {{- if .Values.consul.enabled }}
-        version: "v1"
-        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -84,86 +77,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- if .Values.consul.enabled }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ include "guestbook.fullname" . }}-v2
-  labels:
-    {{- include "guestbook.labels" . | nindent 4 }}
-spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
-  selector:
-    matchLabels:
-      {{- include "guestbook.selectorLabels" . | nindent 6 }}
-      version: "v2" 
-  template:
-    metadata:
-      annotations:
-      {{- with .Values.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/service-meta-version: "v2" 
-        consul.hashicorp.com/connect-service-upstreams: '{{ template "redis.fullname" . }}-master:{{ .Values.redis.master.service.ports.redis }}'
-      labels:
-        {{- include "guestbook.selectorLabels" . | nindent 8 }}
-        version: "v2"
-    spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "guestbook.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}" # "index.docker.io/kin3303/guestbook:v1"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          env:
-            - name: {{"GET_HOSTS_FROM"}}
-              value: {{"env"}}
-            {{- if .Values.redis.enabled }}
-            - name: {{"REDIS_LEADER_SERVICE_HOST"}}
-              value: {{ template "redis.fullname" . }}-master
-            {{- end }}
-            {{- if and (eq .Values.redis.architecture "standalone") (.Values.redis.enabled) }}
-            - name: {{"REDIS_FOLLOWER_SERVICE_HOST"}}
-              value: {{ template "redis.fullname" . }}-master
-            {{- else if and (ne .Values.redis.architecture "replication") (.Values.redis.enabled) }}
-            - name: {{"REDIS_FOLLOWER_SERVICE_HOST"}}
-              value: {{ template "redis.fullname" . }}-replicas
-            {{- end }}            
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-{{- end }}
