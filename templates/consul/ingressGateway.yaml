@@ -10,5 +10,10 @@ spec:
       protocol: http
       services:
         - name: {{ include "guestbook.fullname" . }}
-          hosts: ["*"]     
+          hosts: ["*"]
+    - port: 8888
+      protocol: http
+      services:
+        - name: nginx
+          hosts: ["*"]               
 {{- end }}
